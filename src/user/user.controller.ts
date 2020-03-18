@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Inject, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Inject, UseGuards, NotFoundException } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { MessagePattern, ClientProxy } from "@nestjs/microservices";
 import { User } from "./user.entity";
@@ -14,12 +14,26 @@ export class UserController {
 
   @MessagePattern({ role: 'user', cmd: 'get' })
   getUser(data: any): Promise<User> {
-    return this.userService.findOne(data.username);
+    if(data.username) {
+      return this.userService.findOne(data.username);
+    } else if(data.userId) {
+      return this.userService.findById(data.userId);
+    }
+
+    return Promise.resolve(null);
   }
 
   @UseGuards(AuthGuard)
-  @Get('users/:username')
-  getUserAPI(@Param('username') username: string): Promise<User> {
-    return this.client.send({ role: 'user', cmd: 'get'}, { username }).toPromise<User>();
+  @Get('users/:id')
+  async getUserAPI(@Param('id') userId: string): Promise<any> {
+    const user = await this.client.send({ role: 'user', cmd: 'get'}, { userId }).toPromise<User>();
+
+    if(!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    delete user.password;
+
+    return { user };
   }
 }

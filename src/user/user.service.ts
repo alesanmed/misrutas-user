@@ -11,6 +11,10 @@ export class UserService {
   ) {}
 
   findOne(username: string): Promise<User> {
-    return this.userRepository.findOne({ username })
+    return this.userRepository.findOne({ username });
+  }
+
+  findById(userId: number): Promise<User> {
+    return this.userRepository.findOne({ id: userId });
   }
 }
