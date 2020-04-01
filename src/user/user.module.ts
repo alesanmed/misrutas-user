@@ -4,7 +4,7 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import NatsConfig from 'src/config/nats';
+import NatsConfig from '../config/nats';
 
 @Module({
   imports: [

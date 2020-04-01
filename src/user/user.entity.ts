@@ -1,15 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, PrimaryColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BeforeInsert, Unique } from 'typeorm';
 import { hash } from 'bcrypt';
 import { IsEmail, Min } from 'class-validator';
 import { UserInterface } from './user.interface';
 
 @Entity()
+@Unique(['username'])
+@Unique(['email'])
 export class User implements UserInterface {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  @PrimaryColumn()
   username: string;
 
   @Column()

@@ -1,6 +1,6 @@
-import { CanActivate, ExecutionContext, Inject } from "@nestjs/common";
-import { Observable } from "rxjs";
-import { ClientProxy } from "@nestjs/microservices";
+import { CanActivate, ExecutionContext, Inject, Logger } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { timeout } from 'rxjs/operators';
 
 export class AuthGuard implements CanActivate {
   constructor(
@@ -8,14 +8,23 @@ export class AuthGuard implements CanActivate {
     private readonly client: ClientProxy
   ) {}
 
-  canActivate(
+  async canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ): Promise<boolean> {
+    Logger.log('Auth Guard');
     const req = context.switchToHttp().getRequest();
 
-    return this.client.send(
-      { role: 'auth', cmd: 'check' },
-      { jwt: req.headers['authorization']?.split(' ')[1]})
-      .toPromise<boolean>();
+    try{
+      const res = await this.client.send(
+        { role: 'auth', cmd: 'check' },
+        { jwt: req.headers['authorization']?.split(' ')[1]})
+        .pipe(timeout(5000))
+        .toPromise<boolean>();
+
+        return res;
+    } catch(err) {
+      Logger.error(err);
+      return false;
+    }
   }
 }
