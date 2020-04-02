@@ -12,6 +12,22 @@ This microservice needs a NATS and a PostgreSQL server runing. You can find the 
 $ npm install
 ```
 
+## Loading sample data
+
+There is a script prepared to load 5 sample users into the database with the following credentials:
+
+* user1/password
+* user2/password
+* user3/password
+* user4/password
+* user5/password
+
+For loading them you just have to run:
+
+```shell
+npm run seed
+```
+
 ## Running the app
 
 ```bash
