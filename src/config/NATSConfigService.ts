@@ -10,9 +10,9 @@ export class NATSConfigService {
     return {
       transport: Transport.NATS,
       options: {
-        url: this.configService.get<string>('NATS_URL'),
-        user: this.configService.get<string>('NATS_USER'),
-        pass: this.configService.get<string>('NATS_PASSWORD')
+        url: this.configService.get<string>('NATS_URL') || '',
+        user: this.configService.get<string>('NATS_USER') || '',
+        pass: this.configService.get<string>('NATS_PASSWORD') || ''
       }
     };
   };
