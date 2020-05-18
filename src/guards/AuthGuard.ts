@@ -4,7 +4,7 @@ import { timeout } from 'rxjs/operators';
 
 export class AuthGuard implements CanActivate {
   constructor(
-    @Inject('USER_SERVICE')
+    @Inject('USER_CLIENT')
     private readonly client: ClientProxy
   ) {}
 

@@ -1,19 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { UserSeederModule } from './user/seeder/user.seeder.module';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmConfigService } from './config/TypeOrmConfigService';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'ms-user',
-    password: 'ms-user-pass',
-    database: 'ms-user',
-    synchronize: true,
-    entities: [User]
+  imports: [ConfigModule.forRoot({
+    isGlobal: true
+  }),
+  TypeOrmModule.forRootAsync({
+    useClass: TypeOrmConfigService,
   }), UserModule, UserSeederModule],
   controllers: [],
   providers: [],

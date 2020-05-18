@@ -3,21 +3,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import NatsConfig from '../config/nats';
+import { NATSConfigService } from 'src/config/NATSConfigService';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    ClientsModule.register([{
-      name: 'USER_SERVICE',
-      transport: Transport.NATS,
-      options: {
-        ...NatsConfig
-      }
-    }])
   ],
-  providers: [UserService],
+  providers: [UserService, NATSConfigService, {
+    provide: 'USER_CLIENT',
+    useFactory: (natsConfigService: NATSConfigService) => ({
+      ...natsConfigService.getNATSConfig
+    }),
+    inject: [NATSConfigService]
+  }],
   controllers: [UserController],
   exports: [UserService]
 })

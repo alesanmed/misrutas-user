@@ -1,5 +1,5 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { UserSeederService } from "./user.seeder.service";
+import { Injectable, Logger } from '@nestjs/common';
+import { UserSeederService } from './user.seeder.service';
 
 @Injectable()
 export class Seeder {
