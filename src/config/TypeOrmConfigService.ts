@@ -8,9 +8,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory{
   constructor(private configService: ConfigService) { }
   
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    Logger.log(`Port: ${this.configService.get<number>('POSTGRES_PORT')}`)
-    Logger.log(this.configService.get('POSTGRES_HOST'))
-    Logger.log(this.configService.get('POSTGRES_PORT'))
     return {
       type: 'postgres',
       host: this.configService.get<string>('POSTGRES_DB_HOST') || '',
