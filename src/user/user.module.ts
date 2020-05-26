@@ -3,7 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { NATSConfigService } from 'src/config/NATSConfigService';
+import { NATSConfigService } from '../config/NATSConfigService';
+import { ClientProxyFactory } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -11,12 +12,10 @@ import { NATSConfigService } from 'src/config/NATSConfigService';
   ],
   providers: [UserService, NATSConfigService, {
     provide: 'USER_CLIENT',
-    useFactory: (natsConfigService: NATSConfigService) => ({
-      ...natsConfigService.getNATSConfig
-    }),
+    useFactory: (natsConfigService: NATSConfigService) => ClientProxyFactory.create({ ...natsConfigService.getNATSConfig }),
     inject: [NATSConfigService]
   }],
   controllers: [UserController],
   exports: [UserService]
 })
-export class UserModule {}
+export class UserModule { }
